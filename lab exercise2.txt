@@ -1,0 +1,83 @@
+*C++ code to solve N queen problem by backtracking*/
+#include <bits/stdc++.h>
+using namespace std;
+
+/*function to check if a cell[i][j] is safe from attack of other queens*/
+bool isSafe(int i, int j, int board[4][4], int N)
+{
+    int k, l;
+    // checking for column j
+    for (k = 0; k <= i - 1; k++)
+    {
+        if (board[k][j] == 1)
+            return 0;
+    }
+
+    // checking upper right diagonal
+    k = i - 1;
+    l = j + 1;
+    while (k >= 0 && l < N)
+    {
+        if (board[k][l] == 1)
+            return 0;
+        k = k + 1;
+        l = l + 1;
+    }
+
+    // checking upper left diagonal
+    k = i - 1;
+    l = j - 1;
+    while (k >= 0 && l >= 0)
+    {
+        if (board[k][l] == 1)
+            return 0;
+        k = k - 1;
+        l = l - 1;
+    }
+
+    return 1; //the cell[i][j] is safe
+}
+
+int n_queen(int row, int numberOfqueens, int N, int board[4][4])
+{
+    if (numberOfqueens == 0)
+        return 1;
+
+    int j;
+    for (j = 0; j < N; j++)
+    {
+        if (isSafe(row, j, board, N))
+        {
+            board[row][j] = 1;
+
+            if (n_queen(row + 1, numberOfqueens - 1, N, board))
+                return 1;
+
+            board[row][j] = 0; //backtracking
+        }
+    }
+    return 0;
+}
+
+int main()
+{
+    int board[4][4];
+    int i, j;
+
+    for (i = 0; i < 4; i++)
+    {
+        for (j = 0; j < 4; j++)
+            board[i][j] = 0;
+    }
+
+    n_queen(0, 4, 4, board);
+
+    //printing the board
+    for (i = 0; i < 4; i++)
+    {
+        for (j = 0; j < 4; j++)
+            cout << board[i][j] << "\t";
+        cout << endl;
+    }
+    return 0;
+}
